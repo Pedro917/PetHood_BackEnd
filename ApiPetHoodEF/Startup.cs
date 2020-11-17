@@ -32,16 +32,7 @@ namespace ApiPetHoodEF
             services.AddControllers();
             services.AddDbContext<Context>();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "PetHood", Version = "v1" }); });
-
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.WithOrigins("http://example.com",
-                                            "http://www.contoso.com");
-                    });
-            });
+            services.AddCors();
 
         }
 
@@ -53,7 +44,9 @@ namespace ApiPetHoodEF
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseStaticFiles();
 
             app.UseSwagger();
 

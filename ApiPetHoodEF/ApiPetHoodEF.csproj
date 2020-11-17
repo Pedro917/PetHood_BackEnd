@@ -25,5 +25,20 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Img\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Img\caramelo.png" />
+    <None Include="wwwroot\Img\floquinho.png" />
+    <None Include="wwwroot\Img\fofucho.png" />
+    <None Include="wwwroot\Img\img1.jpg" />
+    <None Include="wwwroot\Img\img2.jpg" />
+    <None Include="wwwroot\Img\img3.jpg" />
+    <None Include="wwwroot\Img\img4.jpg" />
+    <None Include="wwwroot\Img\img5.jpg" />
+  </ItemGroup>
+
 
 </Project>
