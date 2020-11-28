@@ -2,7 +2,7 @@
 
 namespace ApiPetHoodEF.Migrations
 {
-    public partial class Create : Migration
+    public partial class CreateInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,28 +30,29 @@ namespace ApiPetHoodEF.Migrations
                     Localizacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NomePet = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Especie = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RacaId = table.Column<int>(type: "int", nullable: false),
+                    BreedId = table.Column<int>(type: "int", nullable: false),
                     Sexo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Foto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PorteFisico = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Biografia = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InfoEmail = table.Column<bool>(type: "bit", nullable: false)
+                    InfoEmail = table.Column<bool>(type: "bit", nullable: false),
+                    Curtidas = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pets_Breeds_RacaId",
-                        column: x => x.RacaId,
+                        name: "FK_Pets_Breeds_BreedId",
+                        column: x => x.BreedId,
                         principalTable: "Breeds",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pets_RacaId",
+                name: "IX_Pets_BreedId",
                 table: "Pets",
-                column: "RacaId");
+                column: "BreedId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

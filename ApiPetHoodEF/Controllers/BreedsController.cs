@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ApiPetHoodEF.Data;
-using ApiPetHoodEF.Models;
+using Repository;
 
 namespace ApiPetHoodEF.Controllers
 {

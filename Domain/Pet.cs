@@ -13,11 +13,13 @@ namespace Domain
         public string Localizacao { get; set; }
         public string NomePet { get; set; }
         public string Especie { get; set; }
-        public string Raca { get; set; }
+        public Breed Raca { get; set; }
+        public int BreedId { get; set; }
         public string Sexo { get; set; }
         public string Foto { get; set; }
         public string PorteFisico { get; set; }
         public string Biografia { get; set; }
         public bool InfoEmail { get; set; }
+        public int Curtidas { get; set; }
     }
 }

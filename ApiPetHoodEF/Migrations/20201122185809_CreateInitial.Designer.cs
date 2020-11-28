@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
 namespace ApiPetHoodEF.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20201122185809_CreateInitial")]
+    partial class CreateInitial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,6 +45,12 @@ namespace ApiPetHoodEF.Migrations
                     b.Property<string>("Biografia")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("BreedId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Curtidas")
+                        .HasColumnType("int");
+
                     b.Property<string>("Especie")
                         .HasColumnType("nvarchar(max)");
 
@@ -64,9 +72,6 @@ namespace ApiPetHoodEF.Migrations
                     b.Property<string>("PorteFisico")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Raca")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Sexo")
                         .HasColumnType("nvarchar(max)");
 
@@ -75,7 +80,25 @@ namespace ApiPetHoodEF.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BreedId");
+
                     b.ToTable("Pets");
+                });
+
+            modelBuilder.Entity("Domain.Pet", b =>
+                {
+                    b.HasOne("Domain.Breed", "Raca")
+                        .WithMany("Pets")
+                        .HasForeignKey("BreedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Raca");
+                });
+
+            modelBuilder.Entity("Domain.Breed", b =>
+                {
+                    b.Navigation("Pets");
                 });
 #pragma warning restore 612, 618
         }

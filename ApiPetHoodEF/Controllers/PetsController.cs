@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ApiPetHoodEF.Data;
-using ApiPetHoodEF.Models;
+using Repository;
 
 namespace ApiPetHoodEF.Controllers
 {
@@ -21,49 +21,60 @@ namespace ApiPetHoodEF.Controllers
             _context = context;
         }
 
-        // GET: api/Pets
+        // GET: v1/Pets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pet>>> GetPets()
+        public async Task<IActionResult> Get()
         {
-            return await _context.Pets.ToListAsync();
+            var pets = await _context.Pets.ToListAsync();
+
+            return StatusCode(StatusCodes.Status200OK, pets);
         }
 
-        // GET: api/Pets/5
+        // GET: v1/Pets/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pet>> GetPet(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var pet = await _context.Pets.FindAsync(id);
-
-            if (pet == null)
+            try
             {
-                return NotFound();
+                var pet = await _context.Pets.FindAsync(id);
+
+                if (pet == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(pet);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Falha no Banco de dados");
             }
 
-            return pet;
+
         }
 
-        // PUT: api/Pets/5
+        // PUT: v1/Pets/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPet(int id, Pet pet)
+        public async Task<IActionResult> Put(int id, Pet pet)
         {
             if (id != pet.Id)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest, "O id da requisição difere do id do Pet");
             }
-
-            _context.Entry(pet).State = EntityState.Modified;
 
             try
             {
+                _context.Entry(pet).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!PetExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Pet Não Encontrado");
                 }
                 else
                 {
@@ -71,35 +82,49 @@ namespace ApiPetHoodEF.Controllers
                 }
             }
 
-            return NoContent();
+            return BadRequest(pet);
         }
 
-        // POST: api/Pets
+        // POST: v1/Pets
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Pet>> PostPet(Pet pet)
+        public async Task<IActionResult> Post(Pet pet)
         {
-            _context.Pets.Add(pet);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Pets.Add(pet);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPet", new { id = pet.Id }, pet);
+                return StatusCode(StatusCodes.Status201Created, "Pet inserido no sistema");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Falha no Banco de dados");
+            }
         }
 
-        // DELETE: api/Pets/5
+        // DELETE: v1/Pets/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Pet>> DeletePet(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var pet = await _context.Pets.FindAsync(id);
-            if (pet == null)
+            try
             {
-                return NotFound();
+                var pet = await _context.Pets.FindAsync(id);
+                if (pet == null)
+                {
+                    return NotFound("Pet não encontrado");
+                }
+
+                _context.Pets.Remove(pet);
+                await _context.SaveChangesAsync();
+
+                return Ok(pet);
             }
-
-            _context.Pets.Remove(pet);
-            await _context.SaveChangesAsync();
-
-            return pet;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Falha no Banco de dados");
+            }
         }
 
         private bool PetExists(int id)
